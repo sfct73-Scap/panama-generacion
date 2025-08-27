@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from datetime import datetime
+from zoneinfo import ZoneInfo   # desde Python 3.9
 
 URL = "https://sitr.cnd.com.pa/m/pub/gen.html"
 OUTPUT_FILE = "generacion_panama.csv"
@@ -15,7 +16,6 @@ options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 options.binary_location = "/usr/bin/chromium-browser"  # en GitHub Actions se instala Chromium
 
-# Usar Service en lugar de executable_path
 service = Service("/usr/bin/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
@@ -28,7 +28,8 @@ driver.quit()
 lineas = contenido.split("\n")
 patron = re.compile(r"^(.*?)\s+(-?\d+\.\d+|-?\d+)$")
 
-ahora = datetime.now()
+# Fecha y hora en Guatemala (UTC-6)
+ahora = datetime.now(ZoneInfo("America/Guatemala"))
 fecha = ahora.strftime("%Y-%m-%d")
 hora = ahora.strftime("%H:%M:%S")
 
@@ -61,4 +62,4 @@ except FileNotFoundError:
     pass
 
 df.to_csv(OUTPUT_FILE, index=False)
-print(f"✅ Datos guardados en {OUTPUT_FILE}")
+print(f"✅ Datos guardados en {OUTPUT_FILE} ({fecha} {hora} hora Guatemala)")
