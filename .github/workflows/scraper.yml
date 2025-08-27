@@ -3,7 +3,10 @@ name: Scraper Panamá
 on:
   schedule:
     - cron: "0 */3 * * *"   # cada 3 horas
-  workflow_dispatch:         # permite correrlo manualmente
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 👈 le da permiso para escribir en el repo
 
 jobs:
   scrape:
@@ -28,8 +31,8 @@ jobs:
 
     - name: Commit and push results
       run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git add generacion_panama.csv
         git commit -m "Update data $(date)" || echo "No changes"
         git push
