@@ -3,6 +3,7 @@ import re
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from datetime import datetime
 
 URL = "https://sitr.cnd.com.pa/m/pub/gen.html"
@@ -12,10 +13,11 @@ options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-options.binary_location = "/usr/bin/chromium-browser"  # 👈 GitHub usa chromium
+options.binary_location = "/usr/bin/chromium-browser"  # en GitHub Actions se instala Chromium
 
-# en GitHub Actions el driver está en /usr/bin/chromedriver
-driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options)
+# Usar Service en lugar de executable_path
+service = Service("/usr/bin/chromedriver")
+driver = webdriver.Chrome(service=service, options=options)
 
 driver.get(URL)
 time.sleep(5)
