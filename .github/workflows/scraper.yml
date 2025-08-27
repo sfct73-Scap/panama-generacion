@@ -3,10 +3,10 @@ name: Scraper Panamá
 on:
   schedule:
     - cron: "0 */3 * * *"   # cada 3 horas
-  workflow_dispatch:         # permite correrlo manualmente desde Actions
+  workflow_dispatch:
 
 permissions:
-  contents: write   # permiso para hacer commit al repo
+  contents: write
 
 jobs:
   scrape:
@@ -24,7 +24,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas requests lxml html5lib
+        pip install pandas selenium
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser chromium-chromedriver
 
     - name: Run scraper
       run: python scraper.py
